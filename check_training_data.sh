@@ -1,0 +1,1 @@
+ansible-playbook playbooks/check_training_data.yml

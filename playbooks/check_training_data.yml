@@ -1,0 +1,9 @@
+---
+- name: Install Conda for the current user if not installed
+  hosts: all
+  become: no
+  tasks:
+    - name: Run check_training_data.py script
+      ansible.builtin.command:
+        chdir: "{{ lookup('env', 'HOME') }}/sources/upsampling"
+        cmd: "conda activate upsampling && python check_training_data.py --fast"

@@ -35,4 +35,3 @@
         state: present
         insertafter: EOF
       when: not conda_installed.stat.exists
-
