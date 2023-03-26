@@ -1,0 +1,20 @@
+---
+- name: Install CUDA 11.8 and set it as default
+  hosts: all
+  become: yes
+  vars_files:
+    - sudo.yml
+  tasks:
+    - name: Install CUDA and CUDA 11.8
+      ansible.builtin.apt:
+        name:
+          - cuda
+          - cuda-11-8
+        update_cache: yes
+
+    - name: Set default CUDA version to 11.8
+      ansible.builtin.command:
+        cmd: update-alternatives --set cuda /usr/local/cuda-11.8
+      args:
+        warn: no
+

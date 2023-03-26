@@ -1,0 +1,13 @@
+---
+- name: Install SSH key from the current machine on all servers
+  hosts: all
+  become: yes
+  vars_files:
+    - sudo.yml
+  tasks:
+    - name: Install the SSH key
+      ansible.builtin.authorized_key:
+        user: catid
+        key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_ed25519.pub') }}"
+        state: present
+
