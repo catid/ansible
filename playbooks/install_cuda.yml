@@ -5,6 +5,19 @@
   vars_files:
     - sudo.yml
   tasks:
+    - name: Download NVIDIA CUDA Keyring
+      ansible.builtin.get_url:
+        url: https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.0-1_all.deb
+        dest: /tmp/cuda-keyring_1.0-1_all.deb
+        mode: '0644'
+
+    - name: Install NVIDIA CUDA Keyring
+      ansible.builtin.apt:
+        deb: /tmp/cuda-keyring_1.0-1_all.deb
+        state: present
+      notify:
+        - Remove CUDA Keyring DEB
+
     - name: Install CUDA and CUDA 11.8
       ansible.builtin.apt:
         name:
@@ -17,4 +30,10 @@
         cmd: update-alternatives --set cuda /usr/local/cuda-11.8
       args:
         warn: no
+
+  handlers:
+    - name: Remove CUDA Keyring DEB
+      ansible.builtin.file:
+        path: /tmp/cuda-keyring_1.0-1_all.deb
+        state: absent
 

@@ -1,0 +1,14 @@
+---
+- name: Check NVIDIA Driver Version
+  hosts: all
+  become: no
+  tasks:
+    - name: Run nvidia-smi
+      ansible.builtin.command:
+        cmd: nvidia-smi
+      register: nvidia_smi_output
+
+    - name: Display NVIDIA Driver Version
+      ansible.builtin.debug:
+        msg: "NVIDIA Driver Version on {{ inventory_hostname }}: {{ nvidia_smi_output.stdout_lines[2].split('|')[1].strip() }}"
+
