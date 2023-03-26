@@ -1,0 +1,50 @@
+---
+- name: Set up upsampling environment
+  hosts: all
+  become: no
+  vars_files:
+    - sudo.yml
+  tasks:
+    - name: Install ffmpeg
+      become: yes
+      ansible.builtin.apt:
+        name: ffmpeg
+        state: present
+
+    - name: Check if upsampling repository exists
+      ansible.builtin.stat:
+        path: "{{ lookup('env', 'HOME') }}/sources/upsampling"
+      register: upsampling_repository
+
+    - name: Clone upsampling repository
+      ansible.builtin.git:
+        repo: git@github.com:catid/upsampling
+        dest: "{{ lookup('env', 'HOME') }}/sources/upsampling"
+        update: "{{ upsampling_repository.stat.exists }}"
+
+    - name: Check if upsampling conda environment exists
+      ansible.builtin.shell:
+        cmd: "{{ lookup('env', 'HOME') }}/miniconda3/bin/conda env list | grep upsampling"
+      register: conda_env_output
+      ignore_errors: true
+
+    - name: Create upsampling conda environment and install dependencies
+      block:
+        - name: Create conda environment
+          ansible.builtin.shell:
+            cmd: "{{ lookup('env', 'HOME') }}/miniconda3/bin/conda create -y --name upsampling python=3.8"
+
+        - name: Install PyTorch, torchvision, and functorch
+          ansible.builtin.shell:
+            cmd: "{{ lookup('env', 'HOME') }}/miniconda3/envs/upsampling/bin/pip install torch torchvision functorch --extra-index-url https://download.pytorch.org/whl/cu118"
+
+        - name: Install NVIDIA DALI
+          ansible.builtin.shell:
+            cmd: "{{ lookup('env', 'HOME') }}/miniconda3/envs/upsampling/bin/pip install --extra-index-url https://developer.download.nvidia.com/compute/redist --upgrade nvidia-dali-cuda110"
+
+        - name: Install requirements from requirements.txt
+          ansible.builtin.pip:
+            requirements: "{{ lookup('env', 'HOME') }}/sources/upsampling/requirements.txt"
+            virtualenv: "{{ lookup('env', 'HOME') }}/miniconda3/envs/upsampling"
+      when: conda_env_output.rc != 0
+
