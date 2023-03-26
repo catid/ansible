@@ -1,0 +1,38 @@
+---
+- name: Install Conda for the current user if not installed
+  hosts: all
+  become: no
+  tasks:
+    - name: Check if Conda is installed
+      ansible.builtin.stat:
+        path: "{{ lookup('env', 'HOME') }}/miniconda3/bin/conda"
+      register: conda_installed
+
+    - name: Download Miniconda installer
+      ansible.builtin.get_url:
+        url: https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+        dest: "{{ lookup('env', 'HOME') }}/miniconda_installer.sh"
+        mode: '0755'
+      when: not conda_installed.stat.exists
+
+    - name: Install Miniconda
+      ansible.builtin.shell:
+        cmd: "{{ lookup('env', 'HOME') }}/miniconda_installer.sh -b -p {{ lookup('env', 'HOME') }}/miniconda3"
+      args:
+        creates: "{{ lookup('env', 'HOME') }}/miniconda3"
+      when: not conda_installed.stat.exists
+
+    - name: Remove Miniconda installer
+      ansible.builtin.file:
+        path: "{{ lookup('env', 'HOME') }}/miniconda_installer.sh"
+        state: absent
+      when: not conda_installed.stat.exists
+
+    - name: Add Conda to PATH in shell configuration
+      ansible.builtin.lineinfile:
+        path: "{{ lookup('env', 'HOME') }}/.bashrc"
+        line: 'export PATH="{{ lookup(''env'', ''HOME'') }}/miniconda3/bin:$PATH"'
+        state: present
+        insertafter: EOF
+      when: not conda_installed.stat.exists
+

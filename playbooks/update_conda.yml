@@ -1,0 +1,15 @@
+---
+- name: Update Conda
+  hosts: all
+  become: no
+  tasks:
+    - name: Check if Conda is installed
+      ansible.builtin.stat:
+        path: "{{ lookup('env', 'HOME') }}/miniconda3/bin/conda"
+      register: conda_installed
+
+    - name: Update Conda
+      ansible.builtin.shell:
+        cmd: "{{ lookup('env', 'HOME') }}/miniconda3/bin/conda update -y conda"
+      when: conda_installed.stat.exists
+
