@@ -24,5 +24,19 @@ echo "ansible_become_password: myrootpassword" > playbooks/sudo.yml
 4. Associate with all the hosts
 
 ```bash
-./ssh_make_known.sh
+./install_ssh_keys.sh
+```
+
+5. Set up all the hosts
+
+```bash
+./update_apt.sh
+./install_cuda.sh
+./reboot.sh
+
+./upgrade_swap_file.sh
+./update_conda.sh
+./setup_nfs_mounts.sh
+./setup_upsampling.sh
+
 ```

@@ -1,0 +1,11 @@
+---
+- hosts: all
+  become: true
+  vars_files:
+    - sudo.yml
+  tasks:
+    - name: Reboot the servers
+      reboot:
+
+    - name: Wait for the servers to come back online
+      wait_for_connection:
