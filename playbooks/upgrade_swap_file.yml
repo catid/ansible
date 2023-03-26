@@ -1,0 +1,38 @@
+- name: Upgrade swap file size
+  hosts: all
+  become: yes
+  vars_files:
+    - sudo.yml
+  tasks:
+  - name: Detect the existing swap file name
+    shell: |
+      grep -E '^/[^ ]+ swap ' /etc/fstab | awk '{print $1}'
+    register: existing_swap_file
+
+  - name: Disable and delete the existing swap file
+    shell: swapoff {{ existing_swap_file.stdout.strip() }}
+    when: existing_swap_file.stdout != ""
+
+  - name: Remove the existing swap file from /etc/fstab
+    lineinfile:
+      path: /etc/fstab
+      state: absent
+      regexp: '^{{ existing_swap_file.stdout.strip() }}'
+    when: existing_swap_file.stdout != ""
+
+  - name: Create a 256GB swap file
+    shell: |
+      fallocate -l 256G /swapfile
+      chmod 600 /swapfile
+      mkswap /swapfile
+      swapon /swapfile
+      echo '/swapfile swap swap defaults 0 0' >> /etc/fstab
+
+  - name: Check if the swap file is 256GB
+    shell: |
+      grep '^/swapfile' /proc/swaps | awk '{print $3}'
+    register: swap_size
+
+  - name: Report the swap file size
+    debug:
+      var: swap_size.stdout_lines
