@@ -1,0 +1,41 @@
+---
+- hosts: all
+  become: true
+  vars_files:
+    - sudo.yml
+  tasks:
+    - name: Install NFS client
+      apt:
+        name: nfs-common
+        state: present
+
+    - name: Add NFS mount to fstab
+      lineinfile:
+        path: /etc/fstab
+        line: 'tank.lan:/volume1/Media /mnt/Media nfs timeo=14,intr,user 0 0'
+        create: yes
+        state: present
+        backup: yes
+
+    - name: Check if /mnt/Media directory exists
+      stat:
+        path: /mnt/Media
+      register: media_dir
+
+    - name: Create /mnt/Media directory
+      file:
+        path: /mnt/Media
+        state: directory
+        mode: '0755'
+      when: not media_dir.stat.exists
+
+    - name: Reload systemd daemon
+      systemd:
+        daemon-reload: yes
+
+    - name: Mount /mnt/Media
+      mount:
+        path: /mnt/Media
+        src: 'tank.lan:/volume1/Media'
+        fstype: nfs
+        state: mounted
