@@ -1,7 +1,6 @@
 ---
 - name: Update upsampling repository
   hosts: all
-  gather_facts: no
   vars_files:
     - sudo.yml
   tasks:
@@ -18,7 +17,8 @@
         update: yes
         accept_hostkey: yes
 
-    - name: Install requirements from requirements.txt
-      ansible.builtin.pip:
-        requirements: "{{ lookup('env', 'HOME') }}/sources/upsampling/requirements.txt"
-        virtualenv: "{{ lookup('env', 'HOME') }}/miniconda3/envs/upsampling"
+    - name: Update pip with any newly added requirements
+      shell: |
+        cd ~/sources/upsampling
+        ~/miniconda3/bin/conda activate upsampling
+        ~/miniconda3/envs/upsampling/bin/pip install -r requirements.txt
