@@ -17,3 +17,8 @@
         dest: "~/sources/upsampling"
         update: yes
         accept_hostkey: yes
+
+    - name: Install requirements from requirements.txt
+      ansible.builtin.pip:
+        requirements: "{{ lookup('env', 'HOME') }}/sources/upsampling/requirements.txt"
+        virtualenv: "{{ lookup('env', 'HOME') }}/miniconda3/envs/upsampling"

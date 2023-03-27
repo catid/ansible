@@ -5,7 +5,7 @@ SOURCE_HOST="gpu4.lan"
 LOCAL_PATH="dataset"
 
 # This is where it is copied to
-REMOTE_PATH="~/dataset"
+REMOTE_PATH="~"
 
 # Read the list of hosts from the inventory file
 mapfile -t HOSTS < <(grep -oP '(?<=ansible_host=)[^ ]+' playbooks/inventory.ini)
@@ -26,6 +26,7 @@ function rsync_to_hosts() {
     local local_p="$3"
     local remote_p="$4"
     if [[ "$host" != "$src_host" ]]; then
+        trap 'kill -INT $!' INT
         ssh "$src_host" "rsync -az --info=progress2 -B 8192 -e 'ssh -c aes128-ctr' '$local_p' '$host:$remote_p'"
         echo "Rsync from $src_host to $host completed."
     fi
@@ -34,7 +35,7 @@ function rsync_to_hosts() {
   export -f rsync_command
 
   # Run the rsync command in parallel with 2 simultaneous jobs
-  parallel --progress -j 3 rsync_command "$source_host" {} "$local_path" "$remote_path" ::: "${hosts[@]}"
+  parallel --halt-on-error 1 --progress -j 3 rsync_command "$source_host" {} "$local_path" "$remote_path" ::: "${hosts[@]}"
 }
 
 # Call the function with the required variables
