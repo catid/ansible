@@ -13,12 +13,11 @@
     - name: Git pull on ~/sources/upsampling
       ansible.builtin.git:
         repo: git@github.com:catid/upsampling.git
-        dest: "~/sources/upsampling"
+        dest: "{{ lookup('env', 'HOME') }}/sources/upsampling"
         update: yes
         accept_hostkey: yes
 
     - name: Update pip with any newly added requirements
       shell: |
-        cd ~/sources/upsampling
-        ~/miniconda3/bin/conda activate upsampling
-        ~/miniconda3/envs/upsampling/bin/pip install -r requirements.txt
+        cd "{{ lookup('env', 'HOME') }}/sources/upsampling"
+        "{{ lookup('env', 'HOME') }}/miniconda3/envs/upsampling/bin/pip" install -r requirements.txt

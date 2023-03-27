@@ -2,8 +2,14 @@
 - name: Install Conda for the current user if not installed
   hosts: all
   become: no
+  gather_facts: no
   tasks:
-    - name: Run check_training_data.py script
-      ansible.builtin.command:
-        chdir: "{{ lookup('env', 'HOME') }}/sources/upsampling"
-        cmd: "conda activate upsampling && python check_training_data.py --fast"
+    - name: Check training data
+      shell: |
+        cd "{{ lookup('env', 'HOME') }}/sources/upsampling"
+        "{{ lookup('env', 'HOME') }}/miniconda3/envs/upsampling/bin/python" check_training_data.py
+      register: shell_output
+
+    - name: Display shell output
+      debug:
+        msg: "The shell output is: {{ shell_output.stdout }}"
