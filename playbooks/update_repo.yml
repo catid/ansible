@@ -1,0 +1,19 @@
+---
+- name: Update upsampling repository
+  hosts: all
+  gather_facts: no
+  vars_files:
+    - sudo.yml
+  tasks:
+    - name: Ensure git is installed
+      ansible.builtin.package:
+        name: git
+        state: present
+      become: yes
+
+    - name: Git pull on ~/sources/upsampling
+      ansible.builtin.git:
+        repo: git@github.com:catid/upsampling.git
+        dest: "~/sources/upsampling"
+        update: yes
+        accept_hostkey: yes

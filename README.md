@@ -14,7 +14,6 @@ git clone git@github.com:catid/ansible
 cd ansible
 ```
 
-
 3. Create sudo.yml
 
 ```bash
@@ -27,16 +26,36 @@ echo "ansible_become_password: myrootpassword" > playbooks/sudo.yml
 ./install_ssh_keys.sh
 ```
 
-5. Set up all the hosts
+# Setup hosts
 
 ```bash
 ./update_apt.sh
 ./install_cuda.sh
 ./reboot.sh
+./check_nvidia_driver.sh
 
+./install_conda.sh
 ./upgrade_swap_file.sh
-./update_conda.sh
 ./setup_nfs_mounts.sh
-./setup_upsampling.sh
+```
 
+# Regular maintenance
+
+```bash
+./update_apt.sh
+./update_conda.sh
+./reboot.sh
+./check_nvidia_driver.sh
+./update_dataset.sh
+./check_training_data.sh
+```
+
+# Upsampling model scripts setup
+
+```bash
+./setup_upsampling.sh
+```
+
+```bash
+./update_repo.sh
 ```

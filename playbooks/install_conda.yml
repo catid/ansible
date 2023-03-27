@@ -28,10 +28,10 @@
         state: absent
       when: not conda_installed.stat.exists
 
-    - name: Add Conda to PATH in shell configuration
-      ansible.builtin.lineinfile:
-        path: "{{ lookup('env', 'HOME') }}/.bashrc"
-        line: 'export PATH="{{ lookup(''env'', ''HOME'') }}/miniconda3/bin:$PATH"'
-        state: present
-        insertafter: EOF
-      when: not conda_installed.stat.exists
+    - name: Initialize conda for a user
+      shell: /bin/bash
+      args:
+        executable: /bin/bash
+        stdin: |
+          source ~/miniconda3/etc/profile.d/conda.sh
+          conda init bash

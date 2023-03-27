@@ -9,6 +9,12 @@
         name: nfs-common
         state: present
 
+    - name: Remove fstab lines for tank.lan
+      lineinfile:
+        path: /etc/fstab
+        state: absent
+        regexp: "^.*tank\\.lan.*$"
+
     - name: Add NFS mount to fstab
       lineinfile:
         path: /etc/fstab
