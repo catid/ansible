@@ -33,18 +33,18 @@
         - name: Create conda environment
           ansible.builtin.shell:
             cmd: "{{ lookup('env', 'HOME') }}/miniconda3/bin/conda create -y --name upsampling python=3.8"
-
-        - name: Install PyTorch, torchvision, and functorch
-          ansible.builtin.shell:
-            cmd: "{{ lookup('env', 'HOME') }}/miniconda3/envs/upsampling/bin/pip install torch torchvision functorch --extra-index-url https://download.pytorch.org/whl/cu118"
-
-        - name: Install NVIDIA DALI
-          ansible.builtin.shell:
-            cmd: "{{ lookup('env', 'HOME') }}/miniconda3/envs/upsampling/bin/pip install --extra-index-url https://developer.download.nvidia.com/compute/redist --upgrade nvidia-dali-cuda110"
-
-        - name: Update pip with any newly added requirements
-          shell: |
-            cd ~/sources/upsampling
-            ~/miniconda3/bin/conda activate upsampling
-            ~/miniconda3/envs/upsampling/bin/pip install -r requirements.txt
       when: conda_env_output.rc != 0
+
+    - name: Install PyTorch, torchvision, and functorch
+      ansible.builtin.shell:
+        cmd: "{{ lookup('env', 'HOME') }}/miniconda3/envs/upsampling/bin/pip install torch torchvision functorch --extra-index-url https://download.pytorch.org/whl/cu118"
+
+    - name: Install NVIDIA DALI
+      ansible.builtin.shell:
+        cmd: "{{ lookup('env', 'HOME') }}/miniconda3/envs/upsampling/bin/pip install --extra-index-url https://developer.download.nvidia.com/compute/redist --upgrade nvidia-dali-cuda110"
+
+    - name: Update pip with any newly added requirements
+      shell: |
+        cd "{{ lookup('env', 'HOME') }}/sources/upsampling"
+        "{{ lookup('env', 'HOME') }}/miniconda3/bin/conda" activate upsampling
+        "{{ lookup('env', 'HOME') }}/miniconda3/envs/upsampling/bin/pip" install -r requirements.txt
