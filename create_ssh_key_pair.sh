@@ -1,0 +1,1 @@
+ansible-playbook playbooks/create_ssh_key_pair.yml
