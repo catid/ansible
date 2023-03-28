@@ -24,6 +24,14 @@ echo "ansible_become_password: myrootpassword" > playbooks/sudo.yml
 
 Edit the `update_dataset.sh` file to choose where the dataset lives.  By default it is under ~/dataset/ and lives on the `gpu4.lan` host.
 
+The computer that stores the master copy of the dataset should clone this repo and run:
+
+```bash
+./install_ssh_keys.sh
+```
+
+This will install its SSH key on all the other machines so that it can copy files to them.
+
 4. Automatically set up all servers
 
 ```bash
