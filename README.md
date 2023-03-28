@@ -20,11 +20,17 @@ cd ansible
 echo "ansible_become_password: myrootpassword" > playbooks/sudo.yml
 ```
 
-4. Associate with all the hosts
+4. Choose where dataset is stored
+
+Edit the `update_dataset.sh` file to choose where the dataset lives.  By default it is under ~/dataset/ and lives on the `gpu4.lan` host.
+
+4. Automatically set up all servers
 
 ```bash
-./install_ssh_keys.sh
+./full_setup.sh
 ```
+
+This will request the server login password at the start, and at a certain point the computers will reboot and prompt for enrolling a MOK key for the Nvidia drivers if they are not set up yet.  After that point it should complete unattended.
 
 # Setup hosts
 

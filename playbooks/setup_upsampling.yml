@@ -34,6 +34,13 @@
         path: "{{ lookup('env', 'HOME') }}/sources/upsampling"
       register: upsampling_repository
 
+    - name: Add github.com to known_hosts
+      ansible.builtin.known_hosts:
+        name: github.com
+        key: "{{ lookup('pipe', 'ssh-keyscan github.com') }}"
+        state: present
+        path: "{{ lookup('env', 'HOME') }}/.ssh/known_hosts"
+
     - name: Clone upsampling repository
       ansible.builtin.git:
         repo: git@github.com:catid/upsampling

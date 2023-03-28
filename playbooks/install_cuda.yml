@@ -24,12 +24,29 @@
           - cuda
           - cuda-11-8
         update_cache: yes
+      register: cuda_install
 
     - name: Set default CUDA version to 11.8
       ansible.builtin.command:
         cmd: update-alternatives --set cuda /usr/local/cuda-11.8
       args:
         warn: no
+
+    - name: Reboot server if CUDA was installed
+      ansible.builtin.reboot:
+      when: cuda_install.changed
+
+    - name: Wait for the servers to come back online
+      wait_for_connection:
+
+    - name: Run nvidia-smi
+      ansible.builtin.command:
+        cmd: nvidia-smi
+      register: nvidia_smi_output
+
+    - name: Display NVIDIA Driver Version
+      ansible.builtin.debug:
+        msg: "NVIDIA Driver Version on {{ inventory_hostname }}: {{ nvidia_smi_output.stdout_lines[2].split('|')[1].strip() }}"
 
   handlers:
     - name: Remove CUDA Keyring DEB
