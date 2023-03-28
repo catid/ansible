@@ -34,6 +34,7 @@ echo "ansible_become_password: myrootpassword" > playbooks/sudo.yml
 ./reboot.sh
 ./check_nvidia_driver.sh
 
+./install_tmux_conf.sh
 ./install_conda.sh
 ./upgrade_swap_file.sh
 ./setup_nfs_mounts.sh
