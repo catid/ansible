@@ -11,6 +11,24 @@
         name: ffmpeg
         state: present
 
+    - name: Install gcc-11
+      become: yes
+      ansible.builtin.apt:
+        name: gcc-11
+        state: present
+
+    - name: Install g++-11
+      become: yes
+      ansible.builtin.apt:
+        name: g++-11
+        state: present
+
+    - name: Install OpenMPI library
+      become: yes
+      ansible.builtin.apt:
+        name: libopenmpi-dev
+        state: present
+
     - name: Check if upsampling repository exists
       ansible.builtin.stat:
         path: "{{ lookup('env', 'HOME') }}/sources/upsampling"

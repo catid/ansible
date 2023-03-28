@@ -1,0 +1,23 @@
+---
+- name: Install .tmux.conf
+  hosts: all
+  vars_files:
+    - sudo.yml
+  gather_facts: no
+  tasks:
+    - name: Ensure tmux is installed
+      become: yes
+      package:
+        name: tmux
+        state: present
+
+    - name: Create .tmux.conf file
+      become: no
+      ansible.builtin.copy:
+        content: |
+          set -g history-limit 24096
+          setw -g mouse on
+        dest: "{{ ansible_env.HOME }}/.tmux.conf"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0644"
