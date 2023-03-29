@@ -13,20 +13,35 @@
       ansible.builtin.lineinfile:
         path: /etc/default/grub
         regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
-        line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet splash zswap.enabled=1"'
+        line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet splash zswap.enabled=1 zswap.compressor=zstd zswap.zpool=z3fold"'
       when: "'Y' not in zswap_status.stdout"
       register: zswap_changed
-      notify: Update GRUB
 
-  handlers:
     - name: Update GRUB
       ansible.builtin.command:
         cmd: update-grub
+      when: zswap_changed.changed
 
-- name: Reboot and wait for the system to come back up
-  hosts: all
-  become: yes
-  tasks:
+    - name: Add modules to /etc/initramfs-tools/modules
+      ansible.builtin.lineinfile:
+        path: /etc/initramfs-tools/modules
+        line: "{{ item }}"
+        state: present
+      loop:
+        - "zstd"
+        - "zstd_compress"
+        - "z3fold"
+      register: module_changes
+
+    - name: Update initramfs for all kernel versions
+      ansible.builtin.command:
+        cmd: update-initramfs -u -k all
+      args:
+        warn: false
+      when:
+        - (ansible_os_family == 'Debian' or ansible_os_family == 'Ubuntu')
+        - module_changes is changed
+
     - name: Reboot the system
       ansible.builtin.reboot:
         msg: "Rebooting to enable zswap"
@@ -34,4 +49,23 @@
 
     - name: Wait for the system to come back up
       ansible.builtin.wait_for_connection:
-      when: zswap_changed.changed
+      when: (zswap_changed.changed or module_changes is changed)
+
+    - name: Get zswap enabled status
+      ansible.builtin.shell:
+        cmd: cat /sys/module/zswap/parameters/enabled
+      register: zswap_enabled
+
+    - name: Display zswap enabled status
+      ansible.builtin.debug:
+        msg: "zswap enabled status: {{ zswap_enabled.stdout }}"
+
+    - name: Get zswap-related dmesg lines
+      ansible.builtin.shell:
+        cmd: dmesg | grep -i zswap:
+      register: zswap_dmesg
+
+    - name: Display zswap-related dmesg lines
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop: "{{ zswap_dmesg.stdout_lines }}"

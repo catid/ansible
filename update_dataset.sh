@@ -8,7 +8,7 @@ LOCAL_PATH="dataset"
 REMOTE_PATH="~"
 
 # Read the list of hosts from the inventory file
-mapfile -t HOSTS < <(grep -oP '(?<=ansible_host=)[^ ]+' playbooks/inventory.ini)
+mapfile -t HOSTS < <(grep -oP '(?<=ansible_host=)[^ ]+' inventory.ini)
 
 function rsync_to_hosts() {
   local source_host="$1"

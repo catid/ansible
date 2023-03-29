@@ -11,7 +11,7 @@ else
 fi
 
 # specify the inventory file location
-inventory_file='playbooks/inventory.ini'
+inventory_file='inventory.ini'
 
 # parse the hostnames from the inventory file
 hosts=$(grep -E '^[^ ]+ ansible_host=' $inventory_file | awk '{print $2}' | awk -F= '{print $2}')
