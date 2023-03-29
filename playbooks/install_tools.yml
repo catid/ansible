@@ -12,6 +12,31 @@
       ansible.builtin.shell:
         cmd: "{{ lookup('env', 'HOME') }}/miniconda3/bin/conda install -y -c conda-forge -n {{ conda_env_name }} gpustat"
 
+    - name: Create watch_gpu.sh script
+      ansible.builtin.copy:
+        content: |
+          #!/bin/bash
+          gpustat -cp --watch
+        dest: "{{ lookup('env', 'HOME') }}/watch_gpu.sh"
+        mode: '0755'
+
+    - name: Create watch_df.sh script
+      ansible.builtin.copy:
+        content: |
+          #!/bin/bash
+          sudo nvidia-smi -pm ENABLED
+          sudo nvidia-smi -pl 300
+        dest: "{{ lookup('env', 'HOME') }}/nvidia_power_limit.sh"
+        mode: '0755'
+
+    - name: Create watch_gpu.sh script
+      ansible.builtin.copy:
+        content: |
+          #!/bin/bash
+          gpustat -cp --watch
+        dest: "{{ lookup('env', 'HOME') }}/watch_gpu.sh"
+        mode: '0755'
+
     - name: Install tree
       ansible.builtin.apt:
         name: tree
