@@ -1,4 +1,8 @@
-# Setup
+# catid's ansible scripts
+
+These are the scripts that I use to manage the worker nodes on my GPU clsuter.
+
+## Setup
 
 1. Install Ansible:
 

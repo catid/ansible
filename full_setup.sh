@@ -17,11 +17,16 @@ echo "Installing NVIDIA drivers."
 
 echo "Installing system configuration."
 
+./install_zsh.sh
 ./install_tmux_conf.sh
 ./install_conda.sh
 ./upgrade_swap_file.sh
 ./setup_zswap.sh
 ./setup_nfs_mounts.sh
+
+echo "Installing tools."
+
+./install_tools.sh
 
 echo "Setting up project repo."
 

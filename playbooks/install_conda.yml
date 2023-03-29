@@ -35,3 +35,11 @@
         stdin: |
           source ~/miniconda3/etc/profile.d/conda.sh
           conda init bash
+
+    - name: Initialize conda for a user
+      shell: /bin/zsh
+      args:
+        executable: /bin/zsh
+        stdin: |
+          source ~/miniconda3/etc/profile.d/conda.sh
+          conda init zsh
