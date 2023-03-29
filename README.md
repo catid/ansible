@@ -32,31 +32,25 @@ The computer that stores the master copy of the dataset should clone this repo a
 
 This will install its SSH key on all the other machines so that it can copy files to them.
 
-4. Automatically set up all servers
+5. Automatically set up all servers
 
 ```bash
 ./full_setup.sh
 ```
 
-This will request the server login password at the start, and at a certain point the computers will reboot and prompt for enrolling a MOK key for the Nvidia drivers if they are not set up yet.  After that point it should complete unattended.
+This will request the server login password at the start, and at a certain point the computers will reboot and prompt for enrolling a MOK key for the Nvidia drivers if they are not set up yet.  After that point it should run unattended.
 
 # Regular maintenance
 
 ```bash
 ./update_apt.sh
 ./update_conda.sh
-./reboot.sh
-./check_nvidia_driver.sh
+./update_repo.sh
 ./update_dataset.sh
 ./check_training_data.sh
-```
 
-# Upsampling model scripts setup
+./check_nvidia_driver.sh
 
-```bash
-./setup_upsampling.sh
-```
-
-```bash
-./update_repo.sh
+# Optionally
+./reboot.sh
 ```
