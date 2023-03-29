@@ -12,15 +12,15 @@
       ansible.builtin.shell:
         cmd: "{{ lookup('env', 'HOME') }}/miniconda3/bin/conda install -y -c conda-forge -n {{ conda_env_name }} gpustat"
 
-    - name: Create watch_gpu.sh script
+    - name: Create watch_df.sh script
       ansible.builtin.copy:
         content: |
           #!/bin/bash
-          gpustat -cp --watch
-        dest: "{{ lookup('env', 'HOME') }}/watch_gpu.sh"
+          watch df -lh --output=target,avail
+        dest: "{{ lookup('env', 'HOME') }}/watch_df.sh"
         mode: '0755'
 
-    - name: Create watch_df.sh script
+    - name: Create nvidia_power_limit.sh script
       ansible.builtin.copy:
         content: |
           #!/bin/bash
