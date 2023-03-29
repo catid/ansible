@@ -1,0 +1,37 @@
+---
+- name: Enable zswap
+  hosts: all
+  become: yes
+  tasks:
+    - name: Check if zswap is enabled
+      ansible.builtin.command:
+        cmd: cat /sys/module/zswap/parameters/enabled
+      register: zswap_status
+      changed_when: False
+
+    - name: Enable zswap
+      ansible.builtin.lineinfile:
+        path: /etc/default/grub
+        regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
+        line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet splash zswap.enabled=1"'
+      when: "'Y' not in zswap_status.stdout"
+      register: zswap_changed
+      notify: Update GRUB
+
+  handlers:
+    - name: Update GRUB
+      ansible.builtin.command:
+        cmd: update-grub
+
+- name: Reboot and wait for the system to come back up
+  hosts: all
+  become: yes
+  tasks:
+    - name: Reboot the system
+      ansible.builtin.reboot:
+        msg: "Rebooting to enable zswap"
+      when: zswap_changed.changed
+
+    - name: Wait for the system to come back up
+      ansible.builtin.wait_for_connection:
+      when: zswap_changed.changed
