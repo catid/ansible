@@ -40,22 +40,6 @@ This will install its SSH key on all the other machines so that it can copy file
 
 This will request the server login password at the start, and at a certain point the computers will reboot and prompt for enrolling a MOK key for the Nvidia drivers if they are not set up yet.  After that point it should complete unattended.
 
-# Setup hosts
-
-```bash
-./update_apt.sh
-./install_cuda.sh
-./reboot.sh
-./check_nvidia_driver.sh
-
-./install_tmux_conf.sh
-./install_conda.sh
-./upgrade_swap_file.sh
-./setup_nfs_mounts.sh
-
-./setup_upsampling.sh
-```
-
 # Regular maintenance
 
 ```bash

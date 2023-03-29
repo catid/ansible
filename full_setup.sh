@@ -20,6 +20,7 @@ echo "Installing system configuration."
 ./install_tmux_conf.sh
 ./install_conda.sh
 ./upgrade_swap_file.sh
+./setup_zswap.sh
 ./setup_nfs_mounts.sh
 
 echo "Setting up project repo."
