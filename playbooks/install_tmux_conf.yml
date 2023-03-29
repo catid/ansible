@@ -4,20 +4,53 @@
   vars_files:
     - sudo.yml
   gather_facts: yes
+  become: no
   tasks:
+    - name: Install git
+      become: yes
+      ansible.builtin.package:
+        name: git
+        state: present
+
     - name: Ensure tmux is installed
       become: yes
       package:
         name: tmux
         state: present
 
+    - name: Install Tmux Plugin Manager (TPM)
+      ansible.builtin.git:
+        repo: https://github.com/tmux-plugins/tpm
+        dest: ~/.tmux/plugins/tpm
+        version: master
+
     - name: Create .tmux.conf file
-      become: no
       ansible.builtin.copy:
         content: |
           set -g history-limit 24096
           setw -g mouse on
+          set -g @continuum-restore 'on'
         dest: "{{ ansible_env.HOME }}/.tmux.conf"
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
         mode: "0644"
+
+    - name: Configure tmux plugins in .tmux.conf
+      ansible.builtin.blockinfile:
+        path: ~/.tmux.conf
+        block: |
+          # Set TPM path
+          set-environment -g TMUX_PLUGIN_MANAGER_PATH '~/.tmux/plugins/'
+
+          # List of plugins
+          set -g @plugin 'tmux-plugins/tmux-resurrect'
+          set -g @plugin 'tmux-plugins/tmux-continuum'
+
+          # Initialize TPM
+          run-shell '~/.tmux/plugins/tpm/tpm'
+        marker: "# {mark} ANSIBLE MANAGED BLOCK"
+        state: present
+
+    - name: Install tmux plugins
+      ansible.builtin.shell:
+        cmd: tmux new-session -d -s ansible_install_plugins "~/.tmux/plugins/tpm/bin/install_plugins; tmux kill-session -t ansible_install_plugins"
