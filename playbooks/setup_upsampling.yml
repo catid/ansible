@@ -23,6 +23,12 @@
         name: g++-11
         state: present
 
+    - name: Install pdsh
+      become: yes
+      ansible.builtin.apt:
+        name: pdsh
+        state: present
+
     - name: Install OpenMPI library
       become: yes
       ansible.builtin.apt:
