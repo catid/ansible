@@ -38,7 +38,9 @@ This will install its SSH key on all the other machines so that it can copy file
 
 5. Automatically set up all servers
 
-Before running this make sure that the NAS has provided permission for the new server to connect.
+Before running this make sure that the NAS has provided permission for the new server to connect, and the firewall has reserved an IP address for the server.
+
+Watch the logs for the server's SSH public key and allow it in Github.
 
 ```bash
 ./full_setup.sh
