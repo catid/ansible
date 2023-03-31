@@ -27,6 +27,7 @@
       ansible.builtin.shell:
         cmd: "sh {{ ansible_env.HOME }}/install-ohmyzsh.sh --unattended"
       become_user: "{{ ansible_env.USER }}"
+      ignore_errors: yes
 
     - name: Delete Oh My Zsh install script
       ansible.builtin.file:

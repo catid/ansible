@@ -38,6 +38,8 @@ This will install its SSH key on all the other machines so that it can copy file
 
 5. Automatically set up all servers
 
+Before running this make sure that the NAS has provided permission for the new server to connect.
+
 ```bash
 ./full_setup.sh
 ```
