@@ -23,6 +23,13 @@
         name: g++-11
         state: present
 
+    - name: Set GCC 11 as default to be compatible with nvcc
+      become: yes
+      ansible.builtin.command:
+        cmd: update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 60 --slave /usr/bin/g++ g++ /usr/bin/g++-11
+      args:
+        warn: no
+
     - name: Install pdsh
       become: yes
       ansible.builtin.apt:
@@ -39,6 +46,12 @@
       become: yes
       ansible.builtin.apt:
         name: libaio-dev
+        state: present
+
+    - name: Install ninja-build library
+      become: yes
+      ansible.builtin.apt:
+        name: ninja-build
         state: present
 
     - name: Check if upsampling repository exists
