@@ -35,6 +35,12 @@
         name: libopenmpi-dev
         state: present
 
+    - name: Install libaio-dev library
+      become: yes
+      ansible.builtin.apt:
+        name: libaio-dev
+        state: present
+
     - name: Check if upsampling repository exists
       ansible.builtin.stat:
         path: "{{ lookup('env', 'HOME') }}/sources/upsampling"
