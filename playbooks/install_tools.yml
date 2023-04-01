@@ -7,12 +7,18 @@
   vars:
     conda_env_name: base
   tasks:
-    - name: Install gpustat in the Conda environment e.g. gpustat -cp --watch
+    - name: Install gpustat in the base Conda environment e.g. gpustat -cp --watch
       become: no
       ansible.builtin.shell:
         cmd: "{{ lookup('env', 'HOME') }}/miniconda3/bin/conda install -y -c conda-forge -n {{ conda_env_name }} gpustat"
 
+    - name: Remove existing watch_df.sh script
+      ansible.builtin.file:
+        path: "{{ lookup('env', 'HOME') }}/watch_df.sh"
+        state: absent
+
     - name: Create watch_df.sh script
+      become: no
       ansible.builtin.copy:
         content: |
           #!/bin/bash
@@ -20,7 +26,13 @@
         dest: "{{ lookup('env', 'HOME') }}/watch_df.sh"
         mode: '0755'
 
+    - name: Remove existing nvidia_power_limit.sh script
+      ansible.builtin.file:
+        path: "{{ lookup('env', 'HOME') }}/nvidia_power_limit.sh"
+        state: absent
+
     - name: Create nvidia_power_limit.sh script
+      become: no
       ansible.builtin.copy:
         content: |
           #!/bin/bash
@@ -29,11 +41,17 @@
         dest: "{{ lookup('env', 'HOME') }}/nvidia_power_limit.sh"
         mode: '0755'
 
+    - name: Remove existing watch_gpu.sh script
+      ansible.builtin.file:
+        path: "{{ lookup('env', 'HOME') }}/watch_gpu.sh"
+        state: absent
+
     - name: Create watch_gpu.sh script
+      become: no
       ansible.builtin.copy:
         content: |
           #!/bin/bash
-          gpustat -cp --watch
+          gpustat -cp --watch 2
         dest: "{{ lookup('env', 'HOME') }}/watch_gpu.sh"
         mode: '0755'
 
