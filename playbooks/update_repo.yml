@@ -20,4 +20,4 @@
     - name: Update pip with any newly added requirements
       shell: |
         cd "{{ lookup('env', 'HOME') }}/sources/upsampling"
-        "{{ lookup('env', 'HOME') }}/mambaforge/envs/upsampling/bin/pip" install -r requirements.txt
+        "{{ lookup('env', 'HOME') }}/mambaforge/envs/upsampling/bin/pip" install --upgrade -r requirements.txt
