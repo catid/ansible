@@ -7,7 +7,7 @@
     - name: Check training data
       shell: |
         cd "{{ lookup('env', 'HOME') }}/sources/upsampling"
-        "{{ lookup('env', 'HOME') }}/miniconda3/envs/upsampling/bin/python" check_training_data.py --fast --clean
+        "{{ lookup('env', 'HOME') }}/mambaforge/envs/upsampling/bin/python" check_training_data.py --fast --clean
       register: shell_output
 
     - name: Display shell output

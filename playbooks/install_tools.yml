@@ -10,7 +10,7 @@
     - name: Install gpustat in the base Conda environment e.g. gpustat -cp --watch
       become: no
       ansible.builtin.shell:
-        cmd: "{{ lookup('env', 'HOME') }}/miniconda3/bin/conda install -y -c conda-forge -n {{ conda_env_name }} gpustat"
+        cmd: "{{ lookup('env', 'HOME') }}/mambaforge/bin/conda install -y -c conda-forge -n {{ conda_env_name }} gpustat"
 
     - name: Remove existing watch_df.sh script
       ansible.builtin.file:
