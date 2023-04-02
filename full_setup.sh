@@ -3,11 +3,6 @@
 # Enable the 'errexit' option to make the script exit if a command fails
 set -e
 
-echo "Installing SSH keys - Enter any passwords of remote servers when prompted."
-
-./install_ssh_keys.sh
-./create_ssh_key_pair.sh
-
 echo "Updating software on servers."
 
 ./update_apt.sh

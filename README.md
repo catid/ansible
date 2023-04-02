@@ -38,7 +38,16 @@ This will install its SSH key on all the other machines so that it can copy file
 
 5. Automatically set up all servers
 
-Before running this make sure that the NAS has provided permission for the new server to connect, and the firewall has reserved an IP address for the server.
+Before running these scripts make sure that the firewall has a reserved IP address for the server, and that the NAS has provided permission for the new server to connect.
+
+Create SSH keys:
+
+```bash
+./install_ssh_keys.sh
+./create_ssh_key_pair.sh
+```
+
+This will request the server login password at the start.
 
 Watch the logs for the server's SSH public key and allow it in Github.
 
@@ -46,7 +55,7 @@ Watch the logs for the server's SSH public key and allow it in Github.
 ./full_setup.sh
 ```
 
-This will request the server login password at the start, and at a certain point the computers will reboot and prompt for enrolling a MOK key for the Nvidia drivers if they are not set up yet.  After that point it should run unattended.
+At a certain point the computers will reboot and prompt for enrolling a MOK key for the Nvidia drivers if they are not set up yet.  After that point it should run unattended.
 
 # Regular maintenance
 
