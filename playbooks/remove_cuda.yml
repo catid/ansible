@@ -11,9 +11,9 @@
         state: absent
         purge: yes
       with_items:
-        - '^nvidia-.*'
-        - '^libnvidia-.*'
-        - '^cuda-.*'
+        - '^nvidia-.\*'
+        - '^libnvidia-.\*'
+        - '^cuda-.\*'
       ignore_errors: yes
 
     - name: Run autoremove
