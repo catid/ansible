@@ -22,11 +22,10 @@
       ansible.builtin.apt:
         autoremove: yes
         purge: yes
-        register: autoremove_result
 
     - name: Reboot server
       ansible.builtin.reboot:
-      when: remove_packages_result is changed or autoremove_result is changed
+      when: remove_packages_result is changed
 
     - name: Wait for the servers to come back online
       wait_for_connection:
