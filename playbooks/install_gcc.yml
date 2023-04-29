@@ -12,6 +12,7 @@
         - update-alternatives --remove-all gcc
         - update-alternatives --remove-all g++
         - update-alternatives --remove-all cpp-bin
+      ignore_errors: yes
 
     - name: Install required packages
       ansible.builtin.apt:
