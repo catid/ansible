@@ -14,6 +14,7 @@
         - '^nvidia-.*'
         - '^libnvidia-.*'
         - '^cuda-.*'
+      ignore_errors: yes
 
     - name: Run autoremove
       ansible.builtin.apt:
