@@ -1,0 +1,27 @@
+---
+- name: Remove CUDA
+  hosts: all
+  become: yes
+  vars_files:
+    - sudo.yml
+  tasks:
+    - name: Remove NVIDIA and CUDA packages
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: absent
+        purge: yes
+      with_items:
+        - '^nvidia-.*'
+        - '^libnvidia-.*'
+        - '^cuda-.*'
+
+    - name: Run autoremove
+      ansible.builtin.apt:
+        autoremove: yes
+        purge: yes
+
+    - name: Reboot server
+      ansible.builtin.reboot:
+
+    - name: Wait for the servers to come back online
+      wait_for_connection:
