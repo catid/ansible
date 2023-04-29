@@ -1,0 +1,14 @@
+---
+- name: Set GCC 11
+  hosts: all
+  vars_files:
+    - sudo.yml
+  gather_facts: yes
+  become: yes
+  tasks:
+    - name: Set auto mode for alternatives
+      ansible.builtin.shell: "{{ item }}"
+      with_items:
+        - update-alternatives --set g++ /usr/bin/g++-11
+        - update-alternatives --set gcc /usr/bin/gcc-11
+        - update-alternatives --set cpp-bin /usr/bin/cpp-11
