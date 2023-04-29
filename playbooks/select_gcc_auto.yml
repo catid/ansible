@@ -1,5 +1,5 @@
 ---
-- name: Set GCC 11
+- name: Set GCC auto
   hosts: all
   vars_files:
     - sudo.yml
