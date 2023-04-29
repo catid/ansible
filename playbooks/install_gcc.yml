@@ -1,0 +1,42 @@
+---
+- name: Configure GCC and G++ alternatives
+  hosts: all
+  vars_files:
+    - sudo.yml
+  gather_facts: yes
+  become: yes
+  tasks:
+    - name: Remove all alternatives
+      ansible.builtin.shell: "{{ item }}"
+      with_items:
+        - update-alternatives --remove-all gcc
+        - update-alternatives --remove-all g++
+        - update-alternatives --remove-all cpp-bin
+
+    - name: Install required packages
+      ansible.builtin.apt:
+        name:
+          - gcc-11
+          - gcc-12
+          - g++-11
+          - g++-12
+          - cpp-11
+          - cpp-12
+        state: present
+
+    - name: Update alternatives
+      ansible.builtin.shell: "{{ item }}"
+      with_items:
+        - update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-12 100
+        - update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 50
+        - update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 100
+        - update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 50
+        - update-alternatives --install /usr/bin/cpp cpp-bin /usr/bin/cpp-12 100
+        - update-alternatives --install /usr/bin/cpp cpp-bin /usr/bin/cpp-11 50
+
+    - name: Set auto mode for alternatives
+      ansible.builtin.shell: "{{ item }}"
+      with_items:
+        - update-alternatives --auto g++
+        - update-alternatives --auto gcc
+        - update-alternatives --auto cpp-bin

@@ -7,6 +7,10 @@ echo "Updating software on servers."
 
 ./update_apt.sh
 
+echo "Installing GCC."
+
+./install_gcc.sh
+
 echo "Installing NVIDIA drivers."
 
 ./install_cuda.sh
