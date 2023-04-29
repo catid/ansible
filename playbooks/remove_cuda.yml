@@ -5,24 +5,28 @@
   vars_files:
     - sudo.yml
   tasks:
-    - name: Remove NVIDIA and CUDA packages
+    - name: Update package list
       ansible.builtin.apt:
-        name: "{{ item }}"
-        state: absent
-        purge: yes
-      with_items:
-        - '^nvidia-.\*'
-        - '^libnvidia-.\*'
-        - '^cuda-.\*'
+        update_cache: yes
+
+    - name: Remove CUDA and related packages
+      ansible.builtin.command:
+        cmd: apt-get -y --purge remove "*cublas*" "cuda*" "nsight*" "*nvidia*"
+      args:
+        warn: no
+      become: yes
       ignore_errors: yes
+      register: remove_packages_result
 
     - name: Run autoremove
       ansible.builtin.apt:
         autoremove: yes
         purge: yes
+        register: autoremove_result
 
     - name: Reboot server
       ansible.builtin.reboot:
+      when: remove_packages_result is changed or autoremove_result is changed
 
     - name: Wait for the servers to come back online
       wait_for_connection:
