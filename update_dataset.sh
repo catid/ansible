@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This is where the data is stored
-SOURCE_HOST="gpu4.lan"
+SOURCE_HOST="gpu3.lan"
 LOCAL_PATH="dataset"
 
 # This is where it is copied to
