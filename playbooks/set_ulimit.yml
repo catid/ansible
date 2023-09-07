@@ -1,0 +1,19 @@
+---
+- name: Set Ulimit
+  hosts: all
+  become: yes
+  vars_files:
+    sudo.yml
+  tasks:
+    - name: Set ulimit to 99999
+      lineinfile:
+        path: /etc/security/limits.conf
+        line: "* - nofile 99999"
+        create: yes
+      notify: Reload daemon
+
+  handlers:
+    - name: Reload daemon
+      systemd:
+        daemon_reload: yes
+

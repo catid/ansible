@@ -23,6 +23,7 @@ echo "Installing system configuration."
 ./upgrade_swap_file.sh
 ./setup_zswap.sh
 ./setup_nfs_mounts.sh
+./set_ulimit.sh
 
 echo "Installing tools."
 
