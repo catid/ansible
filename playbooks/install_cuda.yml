@@ -32,6 +32,20 @@
       args:
         warn: no
 
+    - name: Add export PATH to .zshrc
+      become: no
+      lineinfile:
+        path: "{{ lookup('env', 'HOME') }}/.zshrc"
+        line: "export PATH=/usr/local/cuda/bin:$PATH"
+        state: present
+
+    - name: Add export PATH to .bashrc
+      become: no
+      lineinfile:
+        path: "{{ lookup('env', 'HOME') }}/.bashrc"
+        line: "export PATH=/usr/local/cuda/bin:$PATH"
+        state: present
+
     - name: Reboot server if CUDA was installed
       ansible.builtin.reboot:
       when: cuda_install.changed
@@ -53,4 +67,3 @@
       ansible.builtin.file:
         path: /tmp/cuda-keyring_1.0-1_all.deb
         state: absent
-

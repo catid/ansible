@@ -95,6 +95,11 @@
         name: speedtest-cli
         state: present
 
+    - name: Install libavfilter-dev
+      ansible.builtin.apt:
+        name: libavfilter-dev
+        state: present
+
     - name: Install iotop
       ansible.builtin.apt:
         name: iotop
