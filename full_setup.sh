@@ -29,13 +29,13 @@ echo "Installing tools."
 
 ./install_tools.sh
 
-echo "Setting up project repo."
+#echo "Setting up project repo."
 
-./setup_upsampling.sh
+#./setup_upsampling.sh
 
-echo "Copying dataset."
+#echo "Copying dataset."
 
-./update_dataset.sh
+#./update_dataset.sh
 
 # If all scripts succeed, print a success message
 echo "All scripts executed successfully."

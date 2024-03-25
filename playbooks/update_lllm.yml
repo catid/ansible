@@ -3,6 +3,7 @@
   hosts: all
   vars_files:
     - sudo.yml
+    - hftoken.yml
   tasks:
     - name: Ensure git is installed
       ansible.builtin.package:
@@ -21,3 +22,8 @@
       shell: |
         cd "{{ lookup('env', 'HOME') }}/sources/lllm"
         "{{ lookup('env', 'HOME') }}/mambaforge/envs/lllm/bin/pip" install --upgrade -r requirements.txt
+
+    - name: Install HuggingFace token
+      shell: |
+        cd "{{ lookup('env', 'HOME') }}/sources/lllm"
+        "{{ lookup('env', 'HOME') }}/mambaforge/envs/lllm/bin/huggingface-cli" login --token {{ hftoken }}

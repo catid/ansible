@@ -1,1 +1,1 @@
-ansible-playbook playbooks/update_repo.yml
+ansible-playbook playbooks/update_upsampling.yml

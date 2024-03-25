@@ -18,10 +18,18 @@ git clone git@github.com:catid/ansible
 cd ansible
 ```
 
-3. Create sudo.yml
+3. Create key files:
+
+Store your servers' root password here:
 
 ```bash
 echo "ansible_become_password: myrootpassword" > playbooks/sudo.yml
+```
+
+Store your HuggingFace auth token here:
+
+```bash
+echo "hftoken: hf_blah" > playbooks/hftoken.yml
 ```
 
 4. Choose where dataset is stored
@@ -62,9 +70,6 @@ At a certain point the computers will reboot and prompt for enrolling a MOK key 
 ```bash
 ./update_apt.sh
 ./update_conda.sh
-./update_repo.sh
-./update_dataset.sh
-./check_training_data.sh
 
 ./check_nvidia_driver.sh
 
