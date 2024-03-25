@@ -1,0 +1,23 @@
+---
+- name: Update lllm repository
+  hosts: all
+  vars_files:
+    - sudo.yml
+  tasks:
+    - name: Ensure git is installed
+      ansible.builtin.package:
+        name: git
+        state: present
+      become: yes
+
+    - name: Git pull on ~/sources/lllm
+      ansible.builtin.git:
+        repo: git@github.com:catid/lllm.git
+        dest: "{{ lookup('env', 'HOME') }}/sources/lllm"
+        update: yes
+        accept_hostkey: yes
+
+    - name: Update pip with any newly added requirements
+      shell: |
+        cd "{{ lookup('env', 'HOME') }}/sources/lllm"
+        "{{ lookup('env', 'HOME') }}/mambaforge/envs/lllm/bin/pip" install --upgrade -r requirements.txt

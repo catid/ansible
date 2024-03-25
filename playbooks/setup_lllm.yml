@@ -1,5 +1,5 @@
 ---
-- name: Set up upsampling environment
+- name: Set up lllm environment
   hosts: all
   become: no
   vars_files:
@@ -61,10 +61,10 @@
         name: ninja-build
         state: present
 
-    - name: Check if upsampling repository exists
+    - name: Check if lllm repository exists
       ansible.builtin.stat:
-        path: "{{ lookup('env', 'HOME') }}/sources/upsampling"
-      register: upsampling_repository
+        path: "{{ lookup('env', 'HOME') }}/sources/lllm"
+      register: lllm_repository
 
     - name: Add github.com to known_hosts
       ansible.builtin.known_hosts:
@@ -73,34 +73,26 @@
         state: present
         path: "{{ lookup('env', 'HOME') }}/.ssh/known_hosts"
 
-    - name: Clone upsampling repository
+    - name: Clone lllm repository
       ansible.builtin.git:
-        repo: git@github.com:catid/upsampling
-        dest: "{{ lookup('env', 'HOME') }}/sources/upsampling"
-        update: "{{ upsampling_repository.stat.exists }}"
+        repo: git@github.com:catid/lllm
+        dest: "{{ lookup('env', 'HOME') }}/sources/lllm"
+        update: "{{ lllm_repository.stat.exists }}"
 
-    - name: Check if upsampling conda environment exists
+    - name: Check if lllm conda environment exists
       ansible.builtin.shell:
-        cmd: "{{ lookup('env', 'HOME') }}/mambaforge/bin/conda env list | grep upsampling"
+        cmd: "{{ lookup('env', 'HOME') }}/mambaforge/bin/conda env list | grep lllm"
       register: conda_env_output
       ignore_errors: true
 
-    - name: Create upsampling conda environment and install dependencies
+    - name: Create lllm conda environment and install dependencies
       block:
         - name: Create conda environment
           ansible.builtin.shell:
-            cmd: "{{ lookup('env', 'HOME') }}/mambaforge/bin/conda create -y --name upsampling python=3.8"
+            cmd: "{{ lookup('env', 'HOME') }}/mambaforge/bin/conda create -y --name lllm python=3.8"
       when: conda_env_output.rc != 0
-
-    - name: Install PyTorch, torchvision, and functorch
-      ansible.builtin.shell:
-        cmd: "{{ lookup('env', 'HOME') }}/mambaforge/envs/upsampling/bin/pip install --extra-index-url https://download.pytorch.org/whl/cu118 --upgrade torch torchvision functorch"
-
-    - name: Install NVIDIA DALI
-      ansible.builtin.shell:
-        cmd: "{{ lookup('env', 'HOME') }}/mambaforge/envs/upsampling/bin/pip install --extra-index-url https://developer.download.nvidia.com/compute/redist --upgrade nvidia-dali-cuda110"
 
     - name: Install pip requirements.txt
       shell: |
-        cd "{{ lookup('env', 'HOME') }}/sources/upsampling"
-        "{{ lookup('env', 'HOME') }}/mambaforge/envs/upsampling/bin/pip" install -r requirements.txt
+        cd "{{ lookup('env', 'HOME') }}/sources/lllm"
+        "{{ lookup('env', 'HOME') }}/mambaforge/envs/lllm/bin/pip" install -r requirements.txt
